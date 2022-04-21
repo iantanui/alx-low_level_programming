@@ -1,16 +1,15 @@
 #include "variadic_functions.h"
 
 /**
- * print_numbers - prints numbers, followed by a new line.
- * @separator: delimiter
- * @n: n args
- * Return: void
- */
+* print_numbers - prints numbers, followed by a new line.
+* @separator: delimiter
+* @n: n args
+* Return: void
+*/
 void print_numbers(const char *separator, const unsigned int n, ...)
 {
 	va_list argument1;
 	unsigned int i;
-
 
 	va_start(argument1, n);
 	if (n != 0)
