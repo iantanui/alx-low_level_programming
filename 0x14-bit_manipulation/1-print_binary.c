@@ -1,58 +1,52 @@
 #include "main.h"
 
 /**
- * binarize - convert number to binary
- * @n: number to convert
- * Return: nothing
+ * _pow_recursion - Search a string for any of a set of bytes.
+ * @x: base
+ * @y: exposant
+ * Return: Pointer to the byte in `s` that matches one of the bytes in `accept`
+ * or NULL if no such byte is found.
  */
-void binarize(unsigned long int n)
+
+unsigned long int _pow_recursion(int x, int y)
 {
-	unsigned int count = 1, j = 0, num = n;
-	int i;
-	char *s;
 
-	/* get length of number */
-	while (num / 10)
-	{
-		count++;
-		num = num / 10;
-	}
-	/* create string */
-	s = malloc(count * sizeof(char));
-	if (s == NULL)
-	{
-		free(s);
-		return;
-	}
-	/* divide by 2 and add remainders */
-	while (n > 0)
-	{
-		s[j] = n % 2 + '0';
-		j++;
-		n = n / 2;
-	}
-	/* print in reverse */
+if (y < 0)
+	return (-1);
+else if (y == 1)
+	return (x);
+else if (y == 0)
+	return (1);
 
-	i = strlen(s) - 1;
-	for (; i >= 0; i--)
-		printf("%c", s[i]);
+return (x * _pow_recursion(x, y - 1));
 
-	free(s);
 }
 
+
 /**
- * print_binary - print number in binary
- * @n: number to print
- * Return: nothing
+ * print_binary - prints decimal to binary
+ * Description: first, finds the biggest exponent for 2, then go down
+ * to find the smaller values
+ * @n: decimal number
  */
+
 void print_binary(unsigned long int n)
 {
+	int i;
+
+	for (i = 0; _pow_recursion(2, i) <= n; i++)
+	;
 	if (n == 0)
-		_putchar('0');
-	else if (n == 1)
-		_putchar('1');
-	else
+		i++;
+
+	for (i--; i >= 0; i--)
 	{
-		binarize(n);
+		if (_pow_recursion(2, i) <= n)
+		{
+			_putchar('1');
+			n -= _pow_recursion(2, i);
+		}
+		else
+			_putchar('0');
 	}
 }
