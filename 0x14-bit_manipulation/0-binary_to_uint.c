@@ -1,78 +1,70 @@
 #include "main.h"
+#include <stdlib.h>
 
 /**
- * power - computes base raised to exp
- * @base: base number
- * @exp: exp number
- * Return: result of exponentiation
- */
-unsigned int power(int base, unsigned int exp)
+ * _strlen - find the length of a string
+ * @s: pointer to the string to check
+ * Return: void
+*/
+
+
+int _strlen(const char *s)
 {
-	unsigned int i, result = 1;
+int i = 0;
+while (s[i])
+	i++;
 
-	for (i = 0; i < exp; i++)
-	result *= base;
-
-	return (result);
+return (i);
 }
 
+
 /**
- * to_decimal - converts binary string to decimal
- * @c: string to convert
- * Return: converted number
+ * _pow_recursion - Search a string for any of a set of bytes.
+ * @x: base
+ * @y: exposant
+ * Return: Pointer to the byte in `s` that matches one of the bytes in `accept`
+ * or NULL if no such byte is found.
  */
-unsigned int to_decimal(const char *c)
+
+int _pow_recursion(int x, int y)
 {
-	char *s = strdup(c);
-	unsigned int j = strlen(s) - 1, res = 0, i;
 
-	for (i = 0; s[i]; i++)
-	{
-		res += power(2, j) * (s[i] - '0');
-		j--;
-	}
+if (y < 0)
+	return (-1);
+else if (y == 1)
+	return (x);
+else if (y == 0)
+	return (1);
 
-	return (res);
+return (x * _pow_recursion(x, y - 1));
+
 }
 
+
 /**
- * binary_to_uint - converts binary number to unsigned int
- * @b: string of 0s and 1s
- * Return: unsigned int number
+ * binary_to_uint - converts a binary number to an unsigned int
+ * @b: binary number
+ *
+ * Return: 0 or converted number
  */
+
 unsigned int binary_to_uint(const char *b)
 {
-	unsigned int result, i, j = 0, flag = 0;
-	char *s = malloc(strlen(b) * sizeof(char));
+	unsigned int n = 0;
+	int i, len;
 
-	if (s == NULL)
-		free(s);
-	
 	if (b == NULL)
-		result = 0;
-
-	else
+		return (0);
+	len = _strlen(b);
+	for (i = 0; b[i]; i++)
 	{
-		for (i = 0; b[i]; i++)
-		{
-			/* check if there's a value that isn't 0 or 1 */
-			if (b[i] != '0' && b[i] != '1')
-			{
-				result = 0;
-				flag = 1;
-				break;
-			}
-			else
-			{
-				s[j] = b[i];
-				j++;
-			}
-		}
+		if (b[i] == '1')
+			n += _pow_recursion(2, (len - i - 1));
+		else if (b[i] != '0')
+			return (0);
 	}
 
-	if (s != NULL && flag == 0)
-		result = to_decimal(s);
-
-	free(s);
-	return (result);
+	return (n);
 }
+
+/*Use bitwise operations*/
