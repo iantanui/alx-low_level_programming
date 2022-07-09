@@ -1,58 +1,57 @@
 #include "lists.h"
 
 /**
- * dlistint_len - returns length of linked list
- * @h: doubly linked list
- * Return: number of elements present
+ * insert_node - insert node at given index
+ * @tmp: ptr to nth position node in doubly linked list
+ * @n: node data
+ * Return: address of inserted node
  */
-size_t dlistint_len(const dlistint_t *h)
+dlistint_t *insert_node(dlistint_t *tmp, int n)
 {
-	unsigned int i = 0;
+	dlistint_t *new;
 
-	while (h)
-	{
-		i++;
-		h = h->next;
-	}
-	return (i);
+	new = malloc(sizeof(struct dlistint_s));
+	if (!new)
+		return (NULL);
+	new->n = n;
+
+	new->next = tmp;
+	new->prev = tmp->prev;
+	tmp->prev->next = new;
+	tmp->prev = new;
+
+	return (new);
 }
 
 /**
- * insert_dnodeint_at_index - inserts node at given index
- * @h: head node of specific dnodeint_t list
- * @idx: index to insert new node at
- * @n: value of new node
- * Return: pointer to new node, NULL if failed
+ * insert_dnodeint_at_index - create and insert node at nth index
+ * @h: pointer to head of list
+ * @idx: index
+ * @n: node data
+ * Return: address of inserted node, or NULL if failed
  */
-
 dlistint_t *insert_dnodeint_at_index(dlistint_t **h, unsigned int idx, int n)
 {
-	dlistint_t *node = malloc(sizeof(dlistint_t));
-	dlistint_t *head = *h, *p;
-	unsigned int count = 0;
+	dlistint_t *tmp;
 
-	if ((node == NULL) || (idx >= dlistint_len(head)))
-	{
-		free(node);
+	/* insert at beginning if empty or existing linked list */
+	if (idx == 0)
+		return (add_dnodeint(h, n));
+	if (!h)
 		return (NULL);
-	}
 
-	else
+	/* insert in the middle of list */
+	tmp = *h;
+	while ((idx != 0) && (tmp->next))
 	{
-		for (count = 0; count < idx; count++)
-		{
-			p = head;
-			head = head->next;
-		}
-
-		node->prev = p;
-		node->n = n;
-		node->next = head;
-
-		p->next = node;
-		head->prev = node;
+		idx -= 1;
+		tmp = tmp->next;
+		if (idx == 0)
+			return (insert_node(tmp, n));
 	}
 
-	return (node);
-	free(node);
+	/* insert at the end of list if idx is one after last node */
+	if (idx == 1)
+		return (add_dnodeint_end(h, n));
+	return (NULL);
 }
